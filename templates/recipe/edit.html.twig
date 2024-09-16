@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}recette : {{recipe.title}}{% endblock %}
+{# {% block title "recette : " ~ slug %} #}
+
+
+{% block body %}
+  
+<h1>{{ recipe.title }}</h1>
+
+{{ form(form, {'method': 'GET'}) }}
+
+{% endblock %}
