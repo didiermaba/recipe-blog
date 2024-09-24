@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Toutes les Recettes
+{% endblock %}
+
+{% block body %}
+	<p>Mes recettes du moments suivis par les grands chefs étoilés du Maroc</p>
+	<p>
+		<a class="btn btn-primary btn-sm" href="{{ path('admin.recipe.create') }} ">Créer une recette
+		</a>
+	</p>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Recettes</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for recipe in recipes %}
+				<tr>
+					<td>
+						<a href=" {{ path('admin.recipe.edit', {id: recipe.id}) }}">{{recipe.title}}</a>
+					</td>
+					<td>
+						<div class="d-flex gap-1">
+							<a class="btn btn-primary btn-sm" href=" {{ path('admin.recipe.edit', {id: recipe.id}) }}">Editer</a>
+							<form action="{{ path('admin.recipe.delete', {id: recipe.id}) }}" method="post">
+								<input type="hidden" name="_method" value="DELETE">
+								<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+							</form>
+						</div>
+					</td>
+				{% endfor %}
+			</tr>
+		</tbody>
+	</table>
+
+{% endblock %}
