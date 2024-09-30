@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/admin.html.twig' %}
 
 {% block title %}Toutes les Recettes
 {% endblock %}
 
 {% block body %}
-	<p>Mes recettes du moments suivis par les grands chefs étoilés du Maroc</p>
+	
 	<p>
 		<a class="btn btn-primary btn-sm" href="{{ path('admin.recipe.create') }} ">Créer une recette
 		</a>
@@ -12,9 +12,10 @@
 
 	<table class="table">
 		<thead>
-			<tr>
+			<tr>	
 				<th>Recettes</th>
-				<th>Actions</th>
+				<th>Catégories</th>
+				<th style='width: 200px' >Actions</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -23,6 +24,7 @@
 					<td>
 						<a href=" {{ path('admin.recipe.edit', {id: recipe.id}) }}">{{recipe.title}}</a>
 					</td>
+					<td>{{ recipe.category.name | default('')}}</td>
 					<td>
 						<div class="d-flex gap-1">
 							<a class="btn btn-primary btn-sm" href=" {{ path('admin.recipe.edit', {id: recipe.id}) }}">Editer</a>

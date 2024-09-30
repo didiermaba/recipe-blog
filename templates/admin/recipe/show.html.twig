@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/admin.html.twig' %}
 
 {% block title %}recette : {{recipe.title}}{% endblock %}
 {# {% block title "recette : " ~ slug %} #}
@@ -7,7 +7,7 @@
 {% block body %}
   
 <h1>{{ recipe.title }}</h1>
-
+<p><img src="/recettes/images/{{ recipe.thumbnail }}" alt=""></p>
 <p>
   {{ recipe.content | nl2br }}
 </p>

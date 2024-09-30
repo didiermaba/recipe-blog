@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/admin.html.twig' %}
 
 {% block title %}recette : {{recipe.title}}{% endblock %}
 {# {% block title "recette : " ~ slug %} #}
@@ -8,6 +8,8 @@
   
 <h1>{{ recipe.title }}</h1>
 
-{{ form(form, {'method': 'GET'}) }}
+<img src="{{ vich_uploader_asset(recipe, 'thumbnailFile') }}" alt="" >
+
+{{ form(form) }}
 
 {% endblock %}
