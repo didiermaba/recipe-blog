@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	
+
 	<p>
 		<a class="btn btn-primary btn-sm" href="{{ path('admin.recipe.create') }} ">Créer une recette
 		</a>
@@ -12,15 +12,17 @@
 
 	<table class="table">
 		<thead>
-			<tr>	
-				<th>Recettes</th>
-				<th>Catégories</th>
-				<th style='width: 200px' >Actions</th>
+			<tr>
+				<th>{{ knp_pagination_sortable(recipes, 'ID', 'r.id' ) }} </th>
+				<th>{{ knp_pagination_sortable(recipes, 'Titre', 'r.title' ) }} </th>
+				<th>Catégorie</th>
+				<th style='width: 200px'>Actions</th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for recipe in recipes %}
 				<tr>
+				    <td>{{ recipe.id }}</td>
 					<td>
 						<a href=" {{ path('admin.recipe.edit', {id: recipe.id}) }}">{{recipe.title}}</a>
 					</td>
@@ -34,9 +36,11 @@
 							</form>
 						</div>
 					</td>
-				{% endfor %}
-			</tr>
+				</tr>
+			{% endfor %}
 		</tbody>
 	</table>
+
+	{{ knp_pagination_render(recipes) }}
 
 {% endblock %}
