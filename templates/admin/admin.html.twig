@@ -17,10 +17,81 @@
 	</head>
 	<body>
 
-		{{ include("_partials/_navbar.html.twig") }}
+		<nav
+			class="navbar navbar-expand-lg bg-body-secondary">
+			{# color="#009be5" #}
+			<div
+				class="container-fluid">
+				{# <img src={{ asset('images/logo.png') }} alt="logo" width="60"> #}
+				<a class="navbar-brand text-warning" href="#">Administration</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item">
+							<a class="nav-link {{ app.current_route starts with 'admin.recipe' ? 'active' : '' }} " aria-current="page" href="{{ path('admin.recipe.index') }}">Recettes</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link {{ app.current_route starts with 'admin.category' ? 'active' : '' }} " aria-current="page" href="{{ path('admin.category.index') }}">Catégories</a>
+						</li>
+						{# <li class="nav-item">
+													<a class="nav-link {{ app.current_route starts with 'recipe.' ? 'active' : '' }} " href="{{ path('admin.recipe.category') }}">Catégories</a>
+												</li> #}
+						{#<li class="nav-item">
+													<a class="nav-link" href="{{ path('donor') }}">Faire un don</a>
+												</li>
+												<li class="nav-item">
+													<a class="nav-link" href="{{ path('contact') }}">Contact</a>
+												</li> #}
+					</ul>
+
+					{# <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+											{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+												{% if is_granted('ROLE_ADMIN') %}
+													<li class="nav-item dropdown">
+														<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+															Espace Admin
+														</a>
+														<ul class="dropdown-menu">
+															<li>
+																<a class="dropdown-item" href="{{ path('admin') }}">Tableau de bord</a>
+															</li>
+					
+														</ul>
+													</li>
+												{% endif %}
+												<li class="nav-item">
+													<a href={{ path('account') }} class="nav-link {{ app.current_route == 'account' ? 'active': ''}}">Mon compte</a>
+												</li>
+												<li class="nav-item">
+													<a class="nav-link" href="{{ path('app_logout') }}">
+														<button class="btn btn-secondary">Déconnexion</button>
+													</a>
+												</li>
+											{% else %}
+												<li class="nav-item">
+													<a class="nav-link" href="{{ path('app_register') }}">
+														<button class="btn btn-secondary  ">Inscription</button>
+													</a>
+												</li>
+												<li class="nav-item">
+													<a class="nav-link" href="{{ path('app_login') }}">
+														<button class="btn btn-success">Connexion</button>
+													</a>
+												</li>
+											{% endif %}
+										</ul>
+										<form class="d-flex" role="search" action="{{ path('app_lookup') }}" method="GET">
+											<input class="form-control me-2" name="search" type="search" placeholder="Recherche..." aria-label="Search">
+											<button class="btn btn-outline-success" type="submit">Chercher</button>
+										</form> #}
+				</div>
+			</div>
+		</nav>
 
 		<div class="container my-4">
-        
+
 			{% include '_partials/flash.html.twig' %}
 
 			{% block body %}{% endblock %}
