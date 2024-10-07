@@ -8,6 +8,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
@@ -19,19 +20,23 @@ class Recipe
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['recipes.index'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5)]
+    #[Groups(['recipes.index', 'recipes.create' ])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5)]
     #[Assert\Regex("/^[a-z0-9]+(?:-[a-z0-9]+)*$/", message: 'slug invalide')]
+    #[Groups(['recipes.index', 'recipes.create'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\Length(min: 10)]
+    #[Groups(['recipes.show', 'recipes.create'])]
     private string $content = '';
 
     #[ORM\Column]
@@ -44,9 +49,11 @@ class Recipe
     #[Assert\NotBlank()]
     #[Assert\Positive()]
     #[Assert\LessThan(1440)]
+    #[Groups(['recipes.index', 'recipes.create'])]
     private ?int $duration = null;
 
     #[ORM\ManyToOne(inversedBy: 'recipes')]
+    #[Groups(['recipes.show'])]
     private ?Category $category = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -55,6 +62,9 @@ class Recipe
     #[Vich\UploadableField(mapping: 'recipes', fileNameProperty: 'thumbnail')]
     #[Assert\Image()]
     private ?File $thumbnailFile = null;
+
+    #[ORM\ManyToOne(inversedBy: 'recipes')]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -173,6 +183,18 @@ class Recipe
     public function setThumbnailFile($thumbnailFile): static
     {
         $this->thumbnailFile = $thumbnailFile;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
