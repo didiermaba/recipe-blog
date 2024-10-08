@@ -28,15 +28,17 @@ class AppFixtures extends Fixture
         $manager->persist($user);
 
 
-        // for ($i = 1; $i <= 10; $i++) {
-        //     $user->setRoles([])
-        //         ->setEmail("user{$i}@doe.fr")
-        //         ->setUsername("user{$i}")
-        //         ->setVerified(true)
-        //         ->setPassword($this->hasher->hashPassword($user, '0000'))
-        //         ->setApiToken('user{$i}');
-        //     $manager->persist($user);
-        // }
+        for ($i = 1; $i <= 10; $i++) {
+            $user = new User();
+            $user->setRoles(['ROLE_USER'])
+                ->setEmail("user{$i}@doe.fr")
+                ->setUsername("user{$i}")
+                ->setVerified(true)
+                ->setPassword($this->hasher->hashPassword($user, '0000'))
+                ->setApiToken("user{$i}");
+                $this->addReference('USER' . $i, $user);
+            $manager->persist($user);
+        }
 
         $manager->flush();
     }
