@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\UX\Turbo\TurboBundle;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 
@@ -77,24 +78,7 @@ class RecipeController extends AbstractController
     //     ]);
     // }
 
-    // #[Route('/crea', name: 'recipe.crea')]
-    // public function crea(Request $request, RecipeRepository $repository, EntityManagerInterface $em): Response
-    // {
-    //     $recipes = $repository->findWithDurationLowerThan(16);
-
-    //     $recipe = new Recipe();
-    //     $recipe->setTitle('barbe à papa')
-    //         ->setSlug('barbe-papa')
-    //         ->setContent('Pause repas à l\'italienne avec ces spaghetti à la bolognaise. Un concentré de saveurs composé d’une viande de bœuf hachée agrémentée de tomates, d\'oignons et de basilic. Prêt en quelques minutes au micro-ondes, ce plat express donne une note chaleureuse à vos déjeuners ou dîners solo.||1 part\n\nPause repas à l\'italienne avec ces spaghetti à la bolognaise. Un concentré de saveurs composé d’une viande de bœuf hachée agrémentée de tomates, d\'oignons et de basilic. Prêt en quelques minutes au micro-ondes, ce plat express donne une note chaleureuse à vos déjeuners ou dîners solo.')
-    //         ->setDuration(5)
-    //         ->setCreatedAt(new \DateTimeImmutable())
-    //         ->setUpdatedAt(new \DateTimeImmutable());
-    //     $em->persist($recipe); // pr suivre l'objet crée
-    //     $em->flush(); // pr memoriser les infos en bd
-    //     return $this->render('recipe/index.html.twig', [
-    //         'recipes' => $recipes
-    //     ]);
-    // }
+    
 
     // #[Route('/{slug}-{id}', name: 'show', requirements: ['id' => '\d+', 'slug' => '[a-z0-9-]+'])]
     // public function show(Request $request, string $slug, int $id, RecipeRepository $repository): Response
@@ -128,12 +112,18 @@ class RecipeController extends AbstractController
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'], requirements: ['id' => Requirement::DIGITS])]
     #[IsGranted(RecipeVoter::EDIT, subject: 'recipe')]
-    public function remove(Recipe $recipe, EntityManagerInterface $em)
+    public function remove(request $request, Recipe $recipe, EntityManagerInterface $em)
     {
 
+        $recipeId = $recipe->getId();
+        $message = "La recette a bien été supprimée";
         $em->remove($recipe);
         $em->flush();
-        $this->addFlash('success', 'La recette a bien été supprimée');
+        if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('admin/recipe/delete.html.twig', ['recipeId' => $recipeId, 'message' => $message ]);
+        }
+        $this->addFlash('success', $message);
         return $this->redirectToRoute('admin/recettes/');
     }
 }

@@ -28,4 +28,11 @@ return [
     'canvas-confetti' => [
         'version' => '1.9.3',
     ],
+    'tom-select' => [
+        'version' => '2.3.1',
+    ],
+    'tom-select/dist/css/tom-select.bootstrap5.css' => [
+        'version' => '2.3.1',
+        'type' => 'css',
+    ],
 ];
