@@ -9,10 +9,7 @@ import { Controller } from '@hotwired/stimulus';
  *
  * Delete this file or adapt it for your use!
  */
-static values = {
-    addLabel: String,
-    deleteLabel: String
-}
+
 export default class extends Controller {
     connect() {
         this.index = this.addElement.childElementCount
