@@ -7,12 +7,14 @@ use App\Form\RecipeType;
 use App\Repository\CategoryRepository;
 use App\Repository\RecipeRepository;
 use App\Security\Voter\RecipeVoter;
+use App\Controller\Admin\RecipePDFMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -80,27 +82,28 @@ class RecipeController extends AbstractController
 
     
 
-    // #[Route('/{slug}-{id}', name: 'show', requirements: ['id' => '\d+', 'slug' => '[a-z0-9-]+'])]
-    // public function show(Request $request, string $slug, int $id, RecipeRepository $repository): Response
-    // {
-    //     $recipe = $repository->find($id);
-    //     if ($recipe->getSlug() !== $slug) {
-    //         return $this->redirectToRoute('recipe.show', ['slug' => $recipe->getSlug(), 'id' => $recipe->getId()]);
-    //     }
+    #[Route('/{slug}-{id}', name: 'show', requirements: ['id' => '\d+', 'slug' => '[a-z0-9-]+'])]
+    public function show(Request $request, string $slug, int $id, RecipeRepository $repository): Response
+    {
+        $recipe = $repository->find($id);
+        if ($recipe->getSlug() !== $slug) {
+            return $this->redirectToRoute('recipe.show', ['slug' => $recipe->getSlug(), 'id' => $recipe->getId()]);
+        }
 
-    //     return $this->render('recipe/show.html.twig', [
-    //         'recipe' => $recipe,
-    //     ]);
-    // }
+        return $this->render('recipe/show.html.twig', [
+            'recipe' => $recipe,
+        ]);
+    }
 
     #[Route('/{id}', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => Requirement::DIGITS])]
     #[IsGranted(RecipeVoter::EDIT, subject: 'recipe')]
-    public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em, UploaderHelper $helper)
+    public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em, UploaderHelper $helper, MessageBusInterface $messageBus )
     {
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush(); // on demande à doctrine de sauvegarder
+            $messageBus->dispatch(new RecipePDFMessage($recipe->getId()));
             $this->addFlash('success', 'la recette a bien été modifiée');
             return $this->redirectToRoute('admin/recipe/index.html.twig');
         }
